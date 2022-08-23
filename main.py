@@ -7,24 +7,107 @@ intents = discord.Intents.default()
 intents.members = True
 intents.reactions = True
 
-bot = commands.Bot(intents = intents)
+bot = commands.Bot(command_prefix="!", description="Just a server helper bot!", intents = intents)
 
 @bot.event
 async def on_ready():
-    Channel = client.get_channel(CHANNEL_ID)
+   print("Starting up!")
 
-# need on_raw_reaction_add and on_raw_reaction_remove
 @bot.event
-async def on_raw_reaction_add(reaction, user):
+async def on_member_join(self, member):
+    guild = member.guild
+    if guild.system_channel is not None: 
+        rules_channel = discord.Client.get_channel(1011466566572969984)
+        roles_channel = discord.Client.get_channel(1011108293076324353)
+        to_send = f'Welcome {member.mention} to {guild.name}!\n'
+        + 'Please read the rules first at {rules_channel} and then assign yourself roles at {roles_channel}!\n'
+        + 'Enjoy your time here!'
+        await guild.system_channel.send(to_send)
+
+@bot.event
+async def on_raw_reaction_add(self, payload):
     ''' Handles specific actions for when, in certain channels, a particular emoji reaction occurs
-        Params: 
+        Params: payload (the emoji that was reacted with)
     '''
+    pronouns_msgID = 1011109559982628885
+
+    guild = discord.Client.get_guild(payload.guild_id)
+    user = guild.get_member(payload.user_id)
+
+    # pin messages
+    if payload.emoji.name == "📌":
+        channel = discord.Client.get_channeld(payload.channel_id)
+
+        message = await channel.fetch_message(payload.message_id)
+        reaction = discord.utils.get(message.reactions, emoji = payload.emoji.name)
+        
+        # sees how many pin reactions are there and if they are a certain number, pin the message
+        # (to change reaction requirement but for now since i'm testing there's only me)
+        if reaction and reaction.count >= 1:
+            await message.pin()
+
+    # assign pronoun roles
+    if str(payload.emoji) == "🌠" and payload.message_id == pronouns_msgID:
+        added = discord.utils.get(guild.roles, name="they/them")
+        if added not in user.roles:
+            await user.add_roles(added)
+
+    if str(payload.emoji) == "✨" and payload.message_id == pronouns_msgID:
+          added = discord.utils.get(guild.roles, name="she/her")
+          if added not in user.roles:
+            await user.add_roles(added)
+        
+    if str(payload.emoji) == "⭐" and payload.message_id == pronouns_msgID:
+        added = discord.utils.get(guild.roles, name="he/him")
+        if added not in user.roles:
+            await user.add_roles(added)
+    
+    if str(payload.emoji) == "🌃" and payload.message_id == pronouns_msgID:
+          added = discord.utils.get(guild.roles, name="ask my pronouns")
+          if added not in user.roles:
+            await user.add_roles(added)
 
 @bot.event
-async def on_raw_reaction_remove(reaction, user):
+async def on_raw_reaction_remove(self, payload):
     '''Handles specific actions for when particular emojis are removed
-        Params:
+        Params: payload (the emoji that was reacted with)
     '''
+    pronouns_msgID = 1011109559982628885
+
+    guild = discord.Client.get_guild(payload.guild_id)
+    user = guild.get_member(payload.user_id)
+
+    # pin messages
+    if payload.emoji.name == "📌":
+        channel = discord.Client.get_channeld(payload.channel_id)
+
+        message = await channel.fetch_message(payload.message_id)
+        reaction = discord.utils.get(message.reactions, emoji = payload.emoji.name)
+        
+        # sees how many pin reactions are there and if they are under certain number, unpin the message
+        if reaction and reaction.count < 1:
+            await message.unpin()
+
+    # unassign pronoun roles
+    if str(payload.emoji) == "🌠" and payload.message_id == pronouns_msgID:
+        added = discord.utils.get(guild.roles, name="they/them")
+        if added in user.roles:
+            await user.remove_roles(added)
+
+    if str(payload.emoji) == "✨" and payload.message_id == pronouns_msgID:
+          added = discord.utils.get(guild.roles, name="she/her")
+          if added in user.roles:
+            await user.remove_roles(added)
+        
+    if str(payload.emoji) == "⭐" and payload.message_id == pronouns_msgID:
+        added = discord.utils.get(guild.roles, name="he/him")
+        if added in user.roles:
+            await user.remove_roles(added)
+    
+    if str(payload.emoji) == "🌃" and payload.message_id == pronouns_msgID:
+          added = discord.utils.get(guild.roles, name="ask my pronouns")
+          if added in user.roles:
+            await user.remove_roles(added)
 
 @bot.listen()
 async def on_message(message):
@@ -33,7 +116,6 @@ async def on_message(message):
     # if a link from AO3 is sent
     if("https://archiveofourown.org/works/") in message:
         ao3_linker(message)
-
 
 @bot.listen('on_message') 
 async def ao3_linker(message):
@@ -132,3 +214,7 @@ async def ao3_linker(message):
     except:
         # if the link is unreadable, throw an error message
         await message.channel.send("Something went wrong in transit! Please verify that the link you sent is valid!")
+
+@bot.command()
+async def play_music():
+    # TODO
