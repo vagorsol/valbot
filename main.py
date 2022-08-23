@@ -12,11 +12,11 @@ intents.reactions = True
 bot = commands.Bot(command_prefix="!", description="Just a server helper bot!", intents = intents)
 
 class MyClient(discord.Client):
-    @bot.event
+    
     async def on_ready():
         print("Starting up!")
 
-    @bot.event
+    
     async def on_member_join(self, member):
         guild = member.guild
         if guild.system_channel is not None: 
@@ -27,7 +27,7 @@ class MyClient(discord.Client):
             + 'Enjoy your time here!'
             await guild.system_channel.send(to_send)
 
-    @bot.event
+    
     async def on_raw_reaction_add(self, payload):
         ''' Handles specific actions for when, in certain channels, a particular emoji reaction occurs
             Params: payload (the emoji that was reacted with)
@@ -70,7 +70,7 @@ class MyClient(discord.Client):
             if added not in user.roles:
                 await user.add_roles(added)
 
-    @bot.event
+    
     async def on_raw_reaction_remove(self, payload):
         '''Handles specific actions for when particular emojis are removed
             Params: payload (the emoji that was reacted with)
@@ -112,7 +112,7 @@ class MyClient(discord.Client):
             if added in user.roles:
                 await user.remove_roles(added)
 
-    @bot.listen()
+    
     async def on_message(message):
         message = message.content.lower()
 
@@ -120,7 +120,7 @@ class MyClient(discord.Client):
         if("https://archiveofourown.org/works/") in message:
             MyClient.ao3_linker(message)
 
-    @bot.listen('on_message') 
+    
     async def ao3_linker(message):
         ''' When given an AO3 link, returns and embed with the work's meta
 
