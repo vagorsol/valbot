@@ -187,7 +187,7 @@ class MyClient(discord.Client):
             embed.add_field(name="Warning:", value=(archiveTags("warning tags")), inline=True)
 
             try: 
-            embed.add_field(name="Categories:", value=(archiveTags("category tags")), inline=True)
+                embed.add_field(name="Categories:", value=(archiveTags("category tags")), inline=True)
             except:
                 x = "y"
 
