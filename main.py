@@ -225,6 +225,6 @@ class MyClient(discord.Client):
     '''
 
 keep_alive()
-client = MyClient()
+client = MyClient(intents = intents)
 token = os.environ.get("bot token")
 client.run(token)
