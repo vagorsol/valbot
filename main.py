@@ -118,7 +118,7 @@ class MyClient(discord.Client):
 
         # if a link from AO3 is sent
         if("https://archiveofourown.org/works/") in message:
-            ao3_linker(message)
+            MyClient.ao3_linker(message)
 
     @bot.listen('on_message') 
     async def ao3_linker(message):
