@@ -1,7 +1,9 @@
 import discord
 from discord.ext import commands
 import requests
+import os
 from bs4 import BeautifulSoup
+from keep_alive import keep_alive
 
 intents = discord.Intents.default()
 intents.members = True
@@ -215,6 +217,13 @@ async def ao3_linker(message):
         # if the link is unreadable, throw an error message
         await message.channel.send("Something went wrong in transit! Please verify that the link you sent is valid!")
 
-@bot.command()
-async def play_music():
-    # TODO
+'''
+    @bot.command()
+    async def play_music():
+        # TODO (python compalins if i don't comment this out)
+'''
+
+keep_alive()
+client = MyClient()
+token = os.environ.get("bot token")
+client.run(token)
