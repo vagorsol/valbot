@@ -114,15 +114,13 @@ class MyClient(discord.Client):
         if message.author == self.user:
             return
 
-        message = message.content.lower()
-
         # if a link from AO3 is sent
-        if("https://archiveofourown.org/works/") in message:
+        if("https://archiveofourown.org/works/") in message.content.lower():
             print("Attempting to read AO3 link now!")
             
             # get the url
-            linkPos = message.find("https://archiveofourown.org/works/")
-            newLine = message[linkPos:len(message.content)]
+            linkPos = message.content.lower().find("https://archiveofourown.org/works/")
+            newLine = message.content.lower()[linkPos:len(message.content)]
 
             # checking to see if any additional text is placed after the link
             # if so, trim it
@@ -132,7 +130,7 @@ class MyClient(discord.Client):
                 endPos = len(message.content)
             
             print(endPos)
-            url = message.content[linkPos:endPos]
+            url = message.content.lower()[linkPos:endPos]
             print(url)
 
             resp = requests.get(url)
@@ -149,7 +147,7 @@ class MyClient(discord.Client):
                     if count > 0:
                         ret = ret + (", " + (i.text))
                     else:
-                        ret = ret + (i.text)
+                        ret = ret + ((i.text))
                     count += 1
 
                 return ret
@@ -163,7 +161,7 @@ class MyClient(discord.Client):
             # reads modules
             def archiveMod(start, module_name):
                 l = soup.find(start, {"class": module_name})
-                ret = l.find("blockquote",{"class": "userstuff"})
+                ret = l.find("blockquote",{"class":"userstuff"})
                 return(ret.text)
             
             # http_response 200 = OK
@@ -174,8 +172,8 @@ class MyClient(discord.Client):
                 author = "By " + archiveBoth("h3","byline heading")
                 author = ' '.join(author.splitlines())
 
-                embed=discord.Embed(title=archiveBoth("h2","title heading"), url=url, description=(author), color=0xff2424)
-                embed.set_thumbnail( url="https://archiveofourown.org/images/ao3_logos/logo.png")
+                embed = discord.Embed(title=archiveBoth("h2","title heading"), url=url, description=(author), color=0xff2424)
+                embed.set_thumbnail(url="https://archiveofourown.org/images/ao3_logos/logo.png")
                 embed.set_author(name=("Archive Of Our Own"), icon_url="https://archiveofourown.org/images/ao3_logos/logo.png")
                 embed.add_field(name="Rating:", value=(archiveTags("rating tags")), inline=True)
                 embed.add_field(name="Warning:", value=(archiveTags("warning tags")), inline=True)
@@ -207,7 +205,7 @@ class MyClient(discord.Client):
                     
                 embed.set_footer(text="Words: " + archiveBoth("dd","words") + " | Chapters: "+ archiveBoth("dd","chapters")+ " | Published: "+ archiveBoth("dd","published"))
 
-                await message.channel.sent(embed = embed)
+                await message.channel.send(embed = embed)
             except:
                 # if the link is unreadable, throw an error message
                 await message.channel.send("Something went wrong in transit! Please verify that the link you sent is valid!")
