@@ -134,7 +134,7 @@ class MyClient(discord.Client):
             print(url)
 
             resp = requests.get(url)
-            soup = BeautifulSoup(resp.text, 'html.parser')
+            soup = BeautifulSoup(resp.text,'html.parser')
 
             # handles finding and processing tags
             def archiveTags(tag_name):
@@ -159,7 +159,7 @@ class MyClient(discord.Client):
 
             # reads modules
             def archiveMod(start, module_name):
-                l = soup.find(start, {"class":module_name})
+                l = soup.find(start,{"class":module_name})
                 ret = l.find("blockquote",{"class":"userstuff"})
                 return(ret.text)
             
