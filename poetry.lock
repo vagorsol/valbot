@@ -16,7 +16,7 @@ multidict = ">=4.5,<7.0"
 yarl = ">=1.0,<2.0"
 
 [package.extras]
-speedups = ["cchardet", "brotli", "aiodns"]
+speedups = ["aiodns", "brotli", "cchardet"]
 
 [[package]]
 name = "aiosignal"

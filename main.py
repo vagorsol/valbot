@@ -14,7 +14,7 @@ bot = commands.Bot(command_prefix="!", description="Just a server helper bot!", 
 
 class MyClient(discord.Client):
     
-    async def on_ready():
+    async def on_ready(self):
         print("Starting up!")
 
     async def on_member_join(self, member):
