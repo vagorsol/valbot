@@ -149,18 +149,17 @@ class MyClient(discord.Client):
                     else:
                         ret = ret + ((i.text))
                     count += 1
-
                 return ret
 
             # reads the information that are classes 
             # (I am assuming, potes your code readability sucks ass (affectionate))
             def archiveBoth(start, category_name):
-                l = soup.find(start, {"class": category_name})
+                l = soup.find(start, {"class":category_name})
                 return(l.text)
 
             # reads modules
             def archiveMod(start, module_name):
-                l = soup.find(start, {"class": module_name})
+                l = soup.find(start, {"class":module_name})
                 ret = l.find("blockquote",{"class":"userstuff"})
                 return(ret.text)
             
@@ -177,14 +176,13 @@ class MyClient(discord.Client):
                 embed.set_author(name=("Archive Of Our Own"), icon_url="https://archiveofourown.org/images/ao3_logos/logo.png")
                 embed.add_field(name="Rating:", value=(archiveTags("rating tags")), inline=True)
                 embed.add_field(name="Warning:", value=(archiveTags("warning tags")), inline=True)
-
+                
                 try: 
                     embed.add_field(name="Categories:", value=(archiveTags("category tags")), inline=True)
                 except:
                     x = "y"
 
                 embed.add_field(name="Fandoms:", value=(archiveTags("fandom tags")), inline=False)
-
                 try: 
                     embed.add_field(name="Relationships:", value=(archiveTags("relationship tags")), inline=False)
                 except:
@@ -202,7 +200,7 @@ class MyClient(discord.Client):
                     embed.add_field(name="Series:", value=(archiveTags("series")), inline=False)
                 except:
                     x = "y"
-                    
+      
                 embed.set_footer(text="Words: " + archiveBoth("dd","words") + " | Chapters: "+ archiveBoth("dd","chapters")+ " | Published: "+ archiveBoth("dd","published"))
 
                 await message.channel.send(embed = embed)
