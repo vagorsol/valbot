@@ -9,3 +9,6 @@ My foray into the magical world of Discord bots!
 
 ## Credits
 [stealingpotatoes](https://replit.com/@stealingpotatos) for a lot of the code (and emotional support)
+
+## Replit
+[Repository on Replit](https://replit.com/@vagorsol/valbot)
