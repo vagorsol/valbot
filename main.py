@@ -8,6 +8,7 @@ from keep_alive import keep_alive
 intents = discord.Intents.default()
 intents.members = True
 intents.reactions = True
+intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", description="Just a server helper bot!", intents = intents)
 
@@ -16,18 +17,15 @@ class MyClient(discord.Client):
     async def on_ready():
         print("Starting up!")
 
-    
     async def on_member_join(self, member):
         guild = member.guild
         if guild.system_channel is not None: 
-            rules_channel = client.get_channel(1011466566572969984)
-            roles_channel = client.get_channel(1011108293076324353)
             to_send = f'Welcome {member.mention} to {guild.name}!\n'
-            + 'Please read the rules first at {rules_channel} and then assign yourself roles at {roles_channel}!\n'
+            + 'Please read the rules first at <#1011466566572969984>'
+            + 'and then assign yourself roles at {#1011108293076324353} and introduce yourself at <#1011794135633629294>!\n'
             + 'Enjoy your time here!'
             await guild.system_channel.send(to_send)
 
-    
     async def on_raw_reaction_add(self, payload):
         ''' Handles specific actions for when, in certain channels, a particular emoji reaction occurs
             Params: payload (the emoji that was reacted with)
@@ -70,7 +68,6 @@ class MyClient(discord.Client):
             if added not in user.roles:
                 await user.add_roles(added)
 
-    
     async def on_raw_reaction_remove(self, payload):
         '''Handles specific actions for when particular emojis are removed
             Params: payload (the emoji that was reacted with)
@@ -112,15 +109,17 @@ class MyClient(discord.Client):
             if added in user.roles:
                 await user.remove_roles(added)
 
-    
-    async def on_message(message):
+    async def on_message(self, message):
+
+        if message.author == self.user:
+            return
+
         message = message.content.lower()
 
         # if a link from AO3 is sent
         if("https://archiveofourown.org/works/") in message:
             MyClient.ao3_linker(message)
 
-    
     async def ao3_linker(message):
         ''' When given an AO3 link, returns and embed with the work's meta
 
@@ -217,12 +216,6 @@ class MyClient(discord.Client):
         except:
             # if the link is unreadable, throw an error message
             await message.channel.send("Something went wrong in transit! Please verify that the link you sent is valid!")
-
-    '''
-        @bot.command()
-        async def play_music():
-            # TODO (python compalins if i don't comment this out)
-    '''
 
 keep_alive()
 client = MyClient(intents = intents)
